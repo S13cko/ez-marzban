@@ -2,12 +2,20 @@
 one command script that installs and configs marzban xray panel
 [
 uses hybla for optimizing server network and configs it
+
 installs adgaurd home for better dns options
+
 disabels ipv6
-fail2ban and configs it for blocking ssh attacks
+
+installs fail2ban and configs it for blocking ssh attacks
+
 installs marzban and changes panle port to 2096
+
 takes ssl for your domain
+
 install aclover script for backup
+
+adgaurd home runs on : http://ip:3000
 ]
 
 
