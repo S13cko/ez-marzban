@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Function to prompt user and get input
+get_input() {
+    local prompt=$1
+    local varname=$2
+    read -p "$prompt" $varname
+}
+
 # Update and upgrade system packages
 apt update && apt -y upgrade
 
@@ -7,7 +14,7 @@ apt update && apt -y upgrade
 apt-get install -y fail2ban
 apt install -y nodejs npm wget
 
-# Run NetOptix script
+# Run NetOptix script with user inputs
 bash <(curl -Ls https://raw.githubusercontent.com/MrAminiDev/NetOptix/main/NetOptix.sh) << EOF
 1
 3
@@ -47,12 +54,12 @@ echo "Please press Ctrl+C after Marzban installation completes."
 sleep 60
 
 # Prompt user to determine if the domain is under CDN
-read -p "Is your domain under CDN? (yes/no): " cdn
+get_input "Is your domain under CDN? (yes/no): " cdn
 
 if [ "$cdn" = "no" ]; then
     # Issue certificate without CDN
     curl https://get.acme.sh | sh -s email=jgffhlef@gmail.com
-    read -p "Enter your domain: " DOMAIN
+    get_input "Enter your domain: " DOMAIN
     export DOMAIN=$DOMAIN
 
     mkdir -p /var/lib/marzban/certs
@@ -61,7 +68,7 @@ if [ "$cdn" = "no" ]; then
 else
     # Issue certificate with CDN
     curl https://get.acme.sh | sh -s email=jgffhlef@gmail.com
-    read -p "Enter your domain: " DOMAIN
+    get_input "Enter your domain: " DOMAIN
     ~/.acme.sh/acme.sh --issue -d "$DOMAIN" --dns --yes-I-know-dns-manual-mode-enough-go-ahead-please
     echo "Please create a TXT record for your domain."
     echo "Press Enter after creating the TXT record."
@@ -87,3 +94,6 @@ wget -O index.html https://raw.githubusercontent.com/MuhammadAshouri/marzban-tem
 # Update and restart Marzban
 marzban update
 marzban restart
+
+# Run the backup script
+bash <(curl -Ls https://github.com/AC-Lover/backup/raw/main/backup.sh)
